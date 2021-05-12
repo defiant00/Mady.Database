@@ -163,6 +163,13 @@ namespace Mady.Database
 		/// <returns>The new Query object.</returns>
 		public Query With(params SqlParameter[] parameters) => new Query(this).With(parameters);
 
+		/// <summary>
+		/// Add SQL parameters to the current query.
+		/// </summary>
+		/// <param name="parameters">The parameters to add to the current query as tuples.</param>
+		/// <returns>The new Query object.</returns>
+		public Query With(params (string Name, object Value)[] parameters) => new Query(this).With(parameters);
+
 		#endregion
 
 		public enum RequestType
@@ -367,6 +374,18 @@ namespace Mady.Database
 			public Query With(params SqlParameter[] parameters)
 			{
 				Parameters.AddRange(parameters);
+				return this;
+			}
+
+			/// <summary>
+			/// Add SQL parameters to the current query.
+			/// </summary>
+			/// <param name="parameters">The parameters to add to the current query as tuples.</param>
+			/// <returns>The current Query object.</returns>
+			public Query With(params (string Name, object Value)[] parameters)
+			{
+				foreach (var (name, value) in parameters)
+					Parameters.Add(new SqlParameter(name, value));
 				return this;
 			}
 
